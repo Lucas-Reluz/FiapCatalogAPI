@@ -51,8 +51,6 @@ public class OrderEventConsumer : BackgroundService
 
             _connection = await factory.CreateConnectionAsync();
             _channel = await _connection.CreateChannelAsync();
-
-            // Declarar exchange e fila
             await _channel.ExchangeDeclareAsync(exchangeName, ExchangeType.Fanout, true, false);
             await _channel.QueueDeclareAsync(queueName, true, false, false);
             await _channel.QueueBindAsync(queueName, exchangeName, string.Empty);
@@ -83,8 +81,6 @@ public class OrderEventConsumer : BackgroundService
             await _channel.BasicConsumeAsync(queueName, false, consumer, stoppingToken);
 
             _logger.LogInformation("OrderEventConsumer iniciado e escutando fila {QueueName}", queueName);
-
-            // Manter rodando até o cancellation
             await Task.Delay(Timeout.Infinite, stoppingToken);
         }
         catch (OperationCanceledException)

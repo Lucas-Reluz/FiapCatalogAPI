@@ -39,8 +39,6 @@ public class RabbitMqPublisher : IEventPublisher
 
             await using var connection = await factory.CreateConnectionAsync();
             await using var channel = await connection.CreateChannelAsync();
-
-            // Declarar exchange (fanout para broadcast)
             await channel.ExchangeDeclareAsync(
                 exchange: exchangeName,
                 type: ExchangeType.Fanout,
@@ -63,7 +61,6 @@ public class RabbitMqPublisher : IEventPublisher
         catch (Exception ex)
         {
             _logger.LogError(ex, "Erro ao publicar evento {EventType}", typeof(T).Name);
-            // Não propagar exceção para não bloquear o fluxo principal
         }
     }
 }

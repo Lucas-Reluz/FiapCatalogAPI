@@ -9,8 +9,6 @@ public class Game
     public int Stock { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
-
-    // EF Core
     protected Game() { }
 
     public Game(string title, string description, decimal price, int stock)

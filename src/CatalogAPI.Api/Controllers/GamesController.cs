@@ -19,10 +19,6 @@ public class GamesController : ControllerBase
         _mediator = mediator;
         _logger = logger;
     }
-
-    /// <summary>
-    /// Listar todos os jogos com paginação
-    /// </summary>
     [HttpGet]
     public async Task<ActionResult<GamesListResponse>> GetGames([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
     {
@@ -38,10 +34,6 @@ public class GamesController : ControllerBase
             return StatusCode(500, new { message = "Erro ao listar jogos" });
         }
     }
-
-    /// <summary>
-    /// Buscar jogo por ID
-    /// </summary>
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<GameResponse>> GetGameById(Guid id)
     {
@@ -63,12 +55,7 @@ public class GamesController : ControllerBase
             return StatusCode(500, new { message = "Erro ao buscar jogo" });
         }
     }
-
-    /// <summary>
-    /// Criar novo jogo (Admin)
-    /// </summary>
     [HttpPost]
-    //[Authorize]  // Comentado temporariamente para testes
     public async Task<ActionResult<GameResponse>> CreateGame([FromBody] CreateGameRequest request)
     {
         try
@@ -83,12 +70,7 @@ public class GamesController : ControllerBase
             return StatusCode(500, new { message = "Erro ao criar jogo" });
         }
     }
-
-    /// <summary>
-    /// Atualizar informações do jogo (Admin)
-    /// </summary>
     [HttpPut("{id:guid}")]
-    //[Authorize]  // Comentado temporariamente para testes
     public async Task<ActionResult<GameResponse>> UpdateGame(Guid id, [FromBody] UpdateGameRequest request)
     {
         try
@@ -107,12 +89,7 @@ public class GamesController : ControllerBase
             return StatusCode(500, new { message = "Erro ao atualizar jogo" });
         }
     }
-
-    /// <summary>
-    /// Atualizar estoque (Admin)
-    /// </summary>
     [HttpPatch("{id:guid}/stock")]
-    //[Authorize]  // Comentado temporariamente para testes
     public async Task<ActionResult> UpdateStock(Guid id, [FromBody] UpdateStockRequest request)
     {
         try

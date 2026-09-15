@@ -11,11 +11,7 @@ using CatalogAPI.Infrastructure.Messaging;
 using CatalogAPI.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container
 builder.Services.AddControllers();
-
-// Configure Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -25,8 +21,6 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1",
         Description = "API de Catálogo de Jogos e Gerenciamento de Estoque"
     });
-
-    // Adicionar suporte JWT no Swagger
     c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
     {
         Description = "JWT Authorization header usando o esquema Bearer. Exemplo: 'Bearer {token}'",
@@ -51,34 +45,18 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
-
-// Configure Logging
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
-
-// Database
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<CatalogDbContext>(options =>
     options.UseNpgsql(connectionString));
-
-// MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(
     typeof(CatalogAPI.Application.Commands.CreateGameCommand).Assembly));
-
-// FluentValidation
 builder.Services.AddValidatorsFromAssemblyContaining<CreateGameCommandValidator>();
-
-// Repositories
 builder.Services.AddScoped<IGameRepository, GameRepository>();
-
-// Event Publisher
 builder.Services.AddSingleton<IEventPublisher, RabbitMqPublisher>();
-
-// Background Service - Order Event Consumer
 builder.Services.AddHostedService<OrderEventConsumer>();
-
-// JWT Authentication
 builder.Services.AddHealthChecks();
 builder.Services.AddMetricServer(options =>
 {
@@ -112,8 +90,6 @@ using (var scope = app.Services.CreateScope())
     var dbContext = scope.ServiceProvider.GetRequiredService<CatalogDbContext>();
     dbContext.Database.Migrate();
 }
-
-// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
